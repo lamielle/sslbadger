@@ -4,6 +4,7 @@
   "description": "SSL badger don't give a shit about self signed certs.",
   "permissions": ["webRequest",
                   "tabs",
+                  "http://*/*",
                   "https://*/*"],
   "background": {
     "scripts": ["background.js"]

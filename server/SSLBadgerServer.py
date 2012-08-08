@@ -41,17 +41,19 @@ class Input(Structure):
 
 # Use SendInput to send a input event with the given keycode
 def SendKey(key):
-   InputsArray1 = Input * 1
+   InputsArray1 = Input * 2
    nullULong = c_ulong(0)
-   keyInput = InputUnion()
-   keyInput.ki = KeyboardInput(key, 0x48, 0, 0, pointer(nullULong))
+   keyInputDown = InputUnion()
+   keyInputDown.ki = KeyboardInput(key, 0x48, 0, 0, pointer(nullULong))
+   keyInputUp= InputUnion()
+   keyInputUp.ki = KeyboardInput(key, 0x48, 0x2, 0, pointer(nullULong))
 
    # One input instance in the array of type 1 (keyboard)
-   inputsArray = InputsArray1((1,keyInput))
-   numSent = windll.user32.SendInput(1, # 1 input event
+   inputsArray = InputsArray1((1, keyInputDown), (1, keyInputUp))
+   numSent = windll.user32.SendInput(2, # 1 input event
                                      pointer(inputsArray),
                                      sizeof(inputsArray[0]))
-   if numSent != 1:
+   if numSent != 2:
       print "SendInput result:", numSent
       print "SentInput error:", windll.kernel32.GetLastError()
 
@@ -61,7 +63,7 @@ class SSLBadgerServer(SimpleHTTPServer.SimpleHTTPRequestHandler):
          self.send_response(200)
          self.end_headers()
          self.wfile.write("OK") #call sample function here
-         time.sleep(5)
+         time.sleep(1)
          # Send tab then enter
          SendKey(0x9)
          SendKey(0xD)
