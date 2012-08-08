@@ -3,7 +3,8 @@
   "version": "1.0",
   "description": "SSL badger don't give a shit about self signed certs.",
   "permissions": ["webRequest",
-                  "https://www.google.com/*"],
+                  "tabs",
+                  "https://*/*"],
   "background": {
     "scripts": ["background.js"]
   },
