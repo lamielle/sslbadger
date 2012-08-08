@@ -1,3 +1,6 @@
+import SimpleHTTPServer
+import SocketServer
+
 from ctypes import *
 import time
 
@@ -52,9 +55,24 @@ def SendKey(key):
       print "SendInput result:", numSent
       print "SentInput error:", windll.kernel32.GetLastError()
 
+class SSLBadgerServer(SimpleHTTPServer.SimpleHTTPRequestHandler):
+   def do_GET(self):
+      if self.path=='/sendTabEnter':
+         self.send_response(200)
+         self.end_headers()
+         self.wfile.write("OK") #call sample function here
+         time.sleep(5)
+         # Send tab then enter
+         SendKey(0x9)
+         SendKey(0xD)
+      else:
+         self.send_response(404)
+         self.end_headers()
+         self.wfile.write("Not Found")
+
 if __name__ == '__main__':
-   for i in xrange(5):
-       time.sleep(1)
-       print i
-   SendKey(0x9)
-   SendKey(0xD)
+   PORT = 9999
+   httpd = SocketServer.TCPServer(("", PORT), SSLBadgerServer)
+
+   print "serving at port", PORT
+   httpd.serve_forever()
