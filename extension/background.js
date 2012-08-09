@@ -1,6 +1,7 @@
 var filters =
   {
-    urls: ["https://*/*"]
+    urls: ["https://*/*"],
+    types: ["main_frame"]
   };
 
 var pendingRequests = {};
